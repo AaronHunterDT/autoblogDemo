@@ -1,0 +1,179 @@
+Widget Customization Options
+Required Settings
+These settings are required for all widgets. If you do not include them, it is likely the widget will not load.
+
+Widget Type
+Each widget will be loaded inside of a <div> tag that you can place where you want on your page. The classes of this tag are used to identify the widget type. The following widget classes are available:
+
+New Car Quote Feeder: dt-new-car-quote
+Used Car Quote Feeder: dt-used-car-quote
+New Car Image Feeder: dt-new-car-image
+Used Car Image Feeder: dt-used-car-image
+New Car Funnel: dt-new-car-funnel
+Car Payment Calculator: dt-car-payment-calculator
+Used Car Feeder by Monthly Payment and Body Type Widget: dt-used-car-payment-body-type
+Used Car Feeder by Makes Model and Monthly Payment Widget: dt-used-car-payment-makes-models
+Inventory Carousel Widget: dt-inventory-carousel
+For example, to load a new car quote widget, you would place the following code in your page:
+
+<div class="dt-new-car-quote"></div>
+Multiple widgets, even of the same type, can be loaded onto the same page, each with their own customization options.
+
+Generator ID
+A generator ID is used to attribute sold leads to a specific source. To specify which generator ID a widget will use, include the data-gid attribute on the widget's <div> tag.
+
+For example, to use a generator ID of "1234-5678", you would include this code:
+
+<div data-gid="1234-5678"></div>
+NOTE: If the <script> tag that loads Detroit Trading's widgets contains a snippet like ?gid=1234-5678, any widgets without the data-gid attribute will use the value in the <script> tag instead. This will continue to be supported but is considered deprecated.
+Tenant
+Detroit Trading configures everyone who hosts a widget as a "tenant" in our configurations. These configurations control many things behind the scenes, including where feeders will redirect users when they submit forms. Every tenant is assigned a unique code that will be provided to you on request or when setting up these widgets for the first time. To specify which tenant a widget will use, include the data-tenant attribute on the widget's <div> tag.
+
+For example, to use a tenant code of "ABC1234", you would include this code:
+
+<div data-tenant="ABC1234"></div>
+NOTE: Detroit Trading tracks domain names for all of our tenants in order to make a best guess at which tenant is hosting a widget. Any widgets without the data-tenant attribute will use these domain names to find the tenant, but as websites change over time and new domains get created, the best way to ensure that a widget will load on any of your pages is to include the data-tenant attribute. This will continue to be supported but may not result in the best experience.
+Functional Options
+These options can be included to further customize the functionality of each widget.
+Pre-Selected Make
+Widgets that have a dropdown to select a make will attempt to find a make in the URL of the page they are on. But if you want to always have a specific make pre-selected, include the data-make attribute on the widget's <div> tag. The make must be spelled exactly as it appears in the dropdown, including any capitalization.
+
+For example, to have "Chevrolet" pre-selected, you would include this code:
+
+<div data-make="Chevrolet"></div>
+Pre-Selected Model
+Widgets that have a dropdown to select a model will attempt to find a model in the URL of the page they are on. But if you want to always have a specific model pre-selected, include the data-model attribute on the widget's <div> tag. The model must be spelled exactly as it appears in the dropdown, including any capitalization.A matching make must also be pre-selected to use this option.
+
+For example, to have "Silverado 1500" pre-selected, you would include this code:
+
+<div data-make="Chevrolet" data-make="Silverado 1500"></div>
+Pre-Selected Body Type
+For widgets with a dropdown to select a body type, to have one pre-selected, include the data-body-type attribute on the widget's <div> tag.
+
+Each widget has its own set of possible options, please refer to the main demo page for the full list of body types for a widget.
+
+For example, to have "Trucks" pre-selected on widgets that support it, you would include this code:
+
+<div data-body-type="Pickup"></div>
+Pre-Selected Price Range
+For widgets with a dropdown to select a price range, to have one pre-selected, include the data-price-range attribute on the widget's <div> tag.
+
+Each widget has its own set of possible options, please refer to the main demo page for the full list of price ranges for a widget.
+
+For example, to have "Less than $15,000" pre-selected on widgets that support it, you would include this code:
+
+<div data-price-range="0,15000"></div>
+Pre-Selected Monthly Payment Budget
+For widgets with a dropdown to select a monthly budget, to have one pre-selected, include the data-budget attribute on the widget's <div> tag. The value should be a numeric string representing the monthly budget.
+
+For example, to have a monthly budget of 500; pre-selected, you would include this code:
+
+<div data-budget=500></div>
+Pre-Filled Postal Code
+For widgets with a form field to enter a postal code, to have one pre-filled, include the data-postal-code or data-zip attribute on the widget's <div> tag. This may be useful if you have already gathered the user's postal code and want to improve their experience by pre-filling it on the widget. Currently, only US ZIP codes are supported.
+
+For example, to have "48326" pre-filled, you would include this code:
+
+<div data-postal-code="48326"></div>
+Min/max Price
+For widgets with a form field to enter a max or min price include the data-min-price or data-max-price attributes on the widget's <div> tag.
+
+For example, if you are searching for vehicles between $10,000 and $20,000, you would include this code:
+
+<div data-min-price="10000" data-max-price="20000"></div>
+Min/max Year
+For widgets with a form field to enter a max or min year include the data-min-year or data-max-year attributes on the widget's <div> tag.
+
+For example, if you are searching for vehicles between 2012 and 2018, you would include this code:
+
+<div data-min-year="2012" data-max-year="2018"></div>
+Condition
+For widgets with a dropdown to select vehicle condition include the data-condition attribute on the widget's <div> tag.
+
+For example, if you are searching for new vehicles only, you would include this code:
+
+<div data-condition="New"></div>
+Campaign ID
+A campaign ID can be used to track traffic from ad campaigns. To specify which campaign ID a widget will use, include the data-cid attribute on the widget's <div> tag.
+
+For example, to use a campaign ID of "UsedTrucksApril2023", you would include this code:
+
+<div data-cid="UsedTrucksApril2023"></div>
+Source ID
+A source ID can be used to track traffic from a generic source. This may be useful if you have multiple pages or widgets and you want to track the individual performance of each with unique source IDs. To specify which source ID a widget will use, include the data-sid attribute on the widget's <div> tag.
+
+For example, to use a source ID of "BestUsedDealsArticle", you would include this code:
+
+<div data-sid="BestUsedDealsArticle"></div>
+Submit Target
+Feeder widgets support this parameter.
+It controls where the new page appears when a submit button is selected - either in the current page, in a new tab, or in an iframe. To specify which submit target a widget will use, include the data-submit-target attribute on the widget's <div> tag.
+
+For example, to have the new page appear in a new tab you would include this code:
+
+<div data-submit-target="blank"></div>
+Allowed values:
+self : same tab
+blank : new tab
+parent : parent tab if the widget is in an <iframe />
+Use Query String
+If you want to control the functionality of widgets on a page with query string parameters in the URL, you can enable this feature by including the use-qs (or data-use-qs) option as an attribute on the widget's <div> tag. Every widget on the page that has this enabled will first use any query string parameters it can to pre-populate dropdowns or set tracking IDs, using its data attributes as a fallback. For example, if a generator ID is specified both in the query string and as a data-gid attribute, the query string value will be used instead. This can be useful to set default functionality on a widget for organic traffic while overriding that functionality based on the URL.
+
+A widget with this feature enabled will look for the following query string parameters:
+
+gid for a generator ID.
+tenant for a tenant code.
+make for a pre-selected make. Unlike the data attribute, capitalization does not matter for the query string parameter.
+model for a pre-selected model, but only if a matching make is also present. Unlike the data attribute, capitalization does not matter for the query string parameter.
+bodytype for a pre-selected body type. This value must match one of the allowed values.
+pricerange for a pre-selected price range. This value must match one of the allowed values.
+postalcode or zip for a pre-filled postal code. This value must match one of the allowed values.
+minyear for a pre-filled minimum year.
+maxyear for a pre-filled maximum year.
+minprice for a pre-filled minimum price.
+maxprice for a pre-filled maximum price.
+condition for a pre-filled condition. This value must match one of the allowed values.
+cid for a campaign ID.
+sid for a source ID.
+gleadid, fbclid, and gclid will also be tracked for Facebook, Google, or another platform's unique click ID if present.
+For example, to enable this feature, you would include this code:
+
+<div use-qs></div>
+Branding Options
+These options can be included to customize the look of each widget to match your branding.
+Theme
+Some widgets have multiple themes available. To choose a theme, include the data-theme attribute on the widget's <div> tag.
+
+For example, to use the minimal theme for the new car quote feeder, you would include this code:
+
+<div data-theme="minimal"></div>
+Primary Color
+The primary branding color of each widget by default is red with a hex code of #C32B2B. This is used as the accent color in headline text and as the background color of every button. To choose your own primary color, include the data-color-primary attribute on the widget's <div> tag. Any valid CSS color can be provided, including hex codes like #C32B2B and #111 or RGB values like rgb(106, 90, 205).
+
+For example, to have a dark blue hex code of #173A64 as the primary color, you would include this code:
+
+<div data-color-primary="#173A64"></div>
+Secondary Color
+The secondary branding color of the New Car Quote and Used Car Quote widgets by default is black, used as the background color of the arrow pointing to the button. To choose your own secondary color, include the data-color-secondary attribute on the widget's <div> tag. Any valid CSS color can be provided, including hex codes like #C32B2B and #111 or RGB values like rgb(106, 90, 205). This option is only available on the New Car Quote and Used Car Quote widgets.
+
+For example, to have a dark blue hex code of #173A64 as the secondary color, you would include this code:
+
+<div data-color-secondary="#173A64"></div>
+Headline Text Color
+The headline text color of each widget by default is black, used as the non-accent color in the headline and other subheaders. To choose your own headline color, include the data-color-headline attribute on the widget's <div> tag. Any valid CSS color can be provided, including hex codes like #C32B2B and #111 or RGB values like rgb(106, 90, 205).
+
+For example, to have a dark blue hex code of #173A64 as the headline color, you would include this code:
+
+<div data-color-headline="#173A64"></div>
+Primary Font
+The primary font of each widget by default is Roboto, using Helvetica, Arial, and a generic sans-serif font as fallback options. To choose your own font, include the data-font-primary attribute on the widget's <div> tag. Any CSS-style font family you use must be a standard web-safe font, such as Arial, or it must be imported and available on your page. If you are already using a font on your page, it will be safe to use in the widgets.
+
+For example, to have Verdana as the primary font in a widget, you would include this code:
+
+<div data-font-primary="Verdana"></div>
+Secondary Font
+The secondary font of each widget by default is Roboto, using Helvetica, Arial, and a generic sans-serif font as fallback options. To choose your own font, include the data-font-secondary attribute on the widget's <div> tag. Any CSS-style font family you use must be a standard web-safe font, such as Arial, or it must be imported and available on your page. If you are already using a font on your page, it will be safe to use in the widgets.
+
+For example, to have Papyrus as the secondary font in a widget, you would include this code:
+
+<div data-font-secondary="Papyrus"></div>

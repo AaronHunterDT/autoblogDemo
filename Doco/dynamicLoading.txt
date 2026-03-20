@@ -1,0 +1,130 @@
+Dynamic Widget Usage
+This page demonstrates how you can dynamically load and unload widgets on your page using JavaScript code. This is useful if you want to load different widgets based on user interaction or other events, or if you have a single page application (e.g. React, Next.js) and want to load widgets in dynamic components.
+
+Normally, you would place this script reference at the bottom of all pages just before this </body> tag.
+
+<script type="text/javascript" src="https://www.rydeshopper.com/app/shoppingtools/scripts/widget-inline.js"></script>
+Instead, use this script reference to load widgets dynamically with JavaScript. The widget.js script does not load any widgets on page load by default. Instead, it requires more JavaScript on your site to actually load the widgets, which is demonstrated below. This more advanced functionality enables you to load widgets only when needed, which can improve page performance, and reload them when the page changes in some dynamic way, such as when a user fills out a make/model form.
+
+<script type="text/javascript" src="https://www.rydeshopper.com/app/shoppingtools/scripts/widget.js"></script>
+You can use the window.dtc.Widget class to load and unload widgets on your page once the widget.js script has been loaded.
+
+Examples
+Load and Unload Widgets
+To load all widgets on the page at once, use the static method dtc.window.Widget.renderAll(), which returns a promise that resolves when all widgets have been loaded. To unload all widgets, use the static method dtc.window.Widget.unmountAll() instead.
+
+To load an individual widget into a div on the page, you create a new Widget object dedicated to that widget, then you use the method render(rootElement) to load it asynchronously. You first need to find an HTMLElement where you want to load the widget using something like document.getElementById("myWidget"), and then you pass it into the render method. To unload that widget, you use the method unmount() on that same Widget instance. You can change which widget a Widget instance is controlling by calling render with a new HTMLElement.
+
+Your code should only use the "render all" methods or the "render one" methods, not both. Mixing the two methods can lead to unexpected behavior.
+
+The following example demonstrates how to load and unload all widgets on the page as well as individual widgets.
+
+Load All Unload All Load New Car Widget Unload New Car Widget Load Used Car Widget Unload Used Car Widget
+<script>
+  const newCarWidget = new window.dtc.Widget({ slot: 1 });
+  const usedCarWidget = new window.dtc.Widget({ slot: 2 }); 
+
+  async function loadAllWidgets() {
+    await window.dtc.Widget.renderAll(); 
+  }
+
+  function unloadAllWidgets() {
+    window.dtc.Widget.unmountAll(); 
+  }
+
+  async function loadWidget(widget, id) {
+    const widgetHtmlElement = document.getElementById(id);
+    await widget.render(widgetHtmlElement); 
+  }
+
+  function unloadWidget(widget, id) {
+    widget.unmount(); 
+  }
+</script>
+
+<button class="all" onClick="loadAllWidgets()">Load All</button>
+<button class="all" onClick="unloadAllWidgets()">Unload All</button>
+<button class="individual" onClick="loadWidget(newCarWidget, 'newWidget')">Load New Car Widget</button>
+<button class="individual" onClick="unloadWidget(newCarWidget, 'newWidget')">Unload New Car Widget</button>
+<button class="individual" onClick="loadWidget(usedCarWidget, 'usedWidget')">Load Used Car Widget</button>
+<button class="individual" onClick="unloadWidget(usedCarWidget, 'usedWidget')">Unload Used Car Widget</button>
+
+<div id="newWidget" class="dt-new-car-quote" data-gid="0000-5200" data-tenant="AF30949" data-theme="minimal"></div>
+<div id="usedWidget" class="dt-used-car-quote" data-gid="0000-5200" data-tenant="AF30949" data-theme="minimal"></div>
+React Component
+If you are using React, you can create a React component that loads and unloads widgets using the Widget class that is available in the global scope. The following example demonstrates one way to write a React component for a widget.
+
+import { useCallback, useEffect, useState } from "react";
+
+// widgetType example: "dt-new-car-funnel"
+// attributes example: { "data-make": "Chevrolet" }
+
+const Widget = ({ widgetType, attributes }) => {
+  if (!window.dtc.Widget) {
+    throw new Error("Could not find DTWidget class.");
+  }
+
+  const dtc = window.dtc;
+
+  const [root, setRoot] = useState(null);
+  const [dtWidget, setDTWidget] = useState(null);
+
+  const onRender = useCallback((element) => {
+    if (element) {
+      setRoot(element);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!dtWidget) {
+      setDTWidget(new dtc.Widget());
+    }
+  }, []);
+
+  useEffect(() => {
+    dtWidget && dtWidget.render(root);
+
+    return () => {
+      dtWidget && dtWidget.unmount();
+    };
+  }, [dtWidget, attributes, root]);
+
+  return (
+    <div className={widgetType} data-gid="0000-5200" data-tenant="AF30949" {...attributes} ref={onRender}></div>
+  );
+};
+
+export default Widget;
+Technical Documentation
+Widget
+Class
+
+A class for rendering Detroit Trading widgets. After widget.js script has loaded, this class is available as window.dtc.Widget.
+
+Constructor
+new window.dtc.Widget(options)
+Parameters
+optionsObject<optional>
+{}
+Properties
+
+slotnumber<optional>
+1
+The "slot" that a widget appears in on a page with multiple widgets. The first widget appears as slot 1, the second at slot 2, and so on, roughly corresponding to their order on the page. This is an optional parameter that can be used to differentiate between multiple widgets on the same page in analytics data. If you do not provide a slot, this will default to 1 for all widgets created through instances of this class, but all functionality will still work as expected other than the "slot" field in analytics.
+
+Methods
+static
+renderAll()Promise<void>
+Renders all widgets on the page and tracks the created React roots.
+static
+unmountAll()
+Unmounts all previously rendered widgets. This function will not unmount widgets that were rendered by instance methods of this class.
+render(rootElement)Promise<void>
+Renders a widget on the page.
+Parameters
+rootElementHTMLElement | null<optional>
+null
+The root HTML element of the widget. If provided, any existing widget on the page will be unmounted first. If not provided, the widget will be rendered on the previously provided root element of this instance.
+
+unmount()
+Unmounts the widget that was previously rendered by this instance.
