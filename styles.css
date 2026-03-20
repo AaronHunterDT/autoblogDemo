@@ -407,3 +407,12 @@ html, body { font-family: var(--shell-font); }
   font-size:.92rem;
   font-weight:600;
 }
+
+
+.carousel-demo-page{ display:grid; gap:16px; }
+.carousel-demo-copy{ display:grid; gap:14px; }
+.carousel-demo-copy p{ margin:0; }
+.demo-bullets{ margin:0; padding-left:1.2rem; color:#374151; }
+.demo-chip-row{ display:flex; flex-wrap:wrap; gap:10px; }
+.demo-chip-row .pill{ text-decoration:none; }
+.carousel-demo-panel{ padding-bottom:18px; }
