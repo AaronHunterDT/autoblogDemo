@@ -24,7 +24,7 @@
   <section class="hero">
     <div class="container hero__inner">
       <h1 class="hero__title">Widget Comparison</h1>
-      <p class="hero__dek">Compare two widgets side-by-side, now including click carousel support and color wheel inputs on both sides.</p>
+      <p class="hero__dek">Compare two widgets side-by-side. When click carousel is selected, each side swaps color controls for inventory filters so you can compare make/model/body style/price behaviors.</p>
     </div>
   </section>
 
@@ -59,6 +59,13 @@
           <input id="hexInputA" type="text" placeholder="#RRGGBB" maxlength="7" />
           <button class="btn" id="applyHexA">Apply</button>
         </div>
+      </div>
+      <div class="group filter-group" id="carouselA" style="display:none;">
+        <span class="label">Carousel filters</span>
+        <label><span>Make</span><select id="carouselMakeA"><option value="">Any make</option><option value="Chevrolet">Chevrolet</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Toyota">Toyota</option><option value="Jeep">Jeep</option></select></label>
+        <label><span>Model</span><select id="carouselModelA"><option value="">Any model</option><option value="Blazer">Blazer</option><option value="Equinox">Equinox</option><option value="F-150">F-150</option><option value="CR-V">CR-V</option><option value="RAV4">RAV4</option><option value="Wrangler">Wrangler</option></select></label>
+        <label><span>Body style</span><select id="carouselBodyA"><option value="">Any body style</option><option value="SUV">SUV</option><option value="Sedan">Sedan</option><option value="Truck">Truck</option><option value="Coupe">Coupe</option></select></label>
+        <label><span>Max price</span><select id="carouselPriceA"><option value="">Any price</option><option value="30000">Under $30k</option><option value="40000">Under $40k</option><option value="50000">Under $50k</option><option value="65000">Under $65k</option></select></label>
       </div>
       <div class="group" id="targetA" style="display:none;">
         <span class="label">Submit</span>
@@ -96,6 +103,13 @@
           <button class="btn" id="applyHexB">Apply</button>
         </div>
       </div>
+      <div class="group filter-group" id="carouselB" style="display:none;">
+        <span class="label">Carousel filters</span>
+        <label><span>Make</span><select id="carouselMakeB"><option value="">Any make</option><option value="Chevrolet">Chevrolet</option><option value="Ford">Ford</option><option value="Honda">Honda</option><option value="Toyota">Toyota</option><option value="Jeep">Jeep</option></select></label>
+        <label><span>Model</span><select id="carouselModelB"><option value="">Any model</option><option value="Blazer">Blazer</option><option value="Equinox">Equinox</option><option value="F-150">F-150</option><option value="CR-V">CR-V</option><option value="RAV4">RAV4</option><option value="Wrangler">Wrangler</option></select></label>
+        <label><span>Body style</span><select id="carouselBodyB"><option value="">Any body style</option><option value="SUV">SUV</option><option value="Sedan">Sedan</option><option value="Truck">Truck</option><option value="Coupe">Coupe</option></select></label>
+        <label><span>Max price</span><select id="carouselPriceB"><option value="">Any price</option><option value="30000">Under $30k</option><option value="40000">Under $40k</option><option value="50000">Under $50k</option><option value="65000">Under $65k</option></select></label>
+      </div>
       <div class="group" id="targetB" style="display:none;">
         <span class="label">Submit</span>
         <button class="btn is-active" data-target="parent">Same tab</button>
@@ -104,8 +118,8 @@
     </div>
 
     <div class="quotes-grid" style="margin-top:10px;">
-      <section class="quotes-card demo-panel" id="panelA"><div id="slotA"></div></section>
-      <section class="quotes-card demo-panel" id="panelB"><div id="slotB"></div></section>
+      <section class="quotes-card demo-panel" id="panelA"><div class="demo-helper" id="helperA" style="display:none;">Carousel mode uses vehicle filters on this side.</div><div id="slotA"></div></section>
+      <section class="quotes-card demo-panel" id="panelB"><div class="demo-helper" id="helperB" style="display:none;">Carousel mode uses vehicle filters on this side.</div><div id="slotB"></div></section>
     </div>
 
     <section class="quotes-card demo-panel" id="panelA2" style="margin-top:16px;"><div id="slotA_stack"></div></section>
@@ -123,8 +137,10 @@
     document.getElementById('year').textContent = new Date().getFullYear();
     const dtc = window.dtc;
     const VALID_HEX = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
+    const CAROUSEL_TYPE = 'inventory-carousel';
     const supportsSubmit = (t) => ['calculator','new-car-quote','new-car-quote-minimal','used-car-quote','used-car-quote-minimal','new-car-image','new-car-image-compact','used-car-image','used-pay-body','used-pay-mm'].includes(t);
     const isMinimal = (t) => ['new-car-quote-minimal','used-car-quote-minimal'].includes(t);
+    const isCarousel = (t) => t === CAROUSEL_TYPE;
 
     function classAndExtras(type) {
       switch(type) {
@@ -151,12 +167,18 @@
       el.className = cls;
       el.setAttribute('data-gid', '0000-5200');
       el.setAttribute('data-tenant', 'AF30949');
-      el.setAttribute('data-color-primary', color);
-      el.setAttribute('data-font-primary', 'Poppins');
-      el.setAttribute('data-font-secondary', 'Poppins');
+      if (!isCarousel(type)) {
+        el.setAttribute('data-color-primary', color);
+        el.setAttribute('data-font-primary', 'Poppins');
+        el.setAttribute('data-font-secondary', 'Poppins');
+      }
       if (cls === 'dt-new-car-funnel') {
         el.setAttribute('data-make', 'Chevrolet');
         el.setAttribute('data-model', 'Blazer');
+      }
+      if (isCarousel(type)) {
+        const attrs = { make: state.carousel.make, model: state.carousel.model, 'body-style': state.carousel.bodyStyle, 'price-max': state.carousel.priceMax };
+        Object.entries(attrs).forEach(([k, v]) => { if (v) el.setAttribute(`data-${k}`, v); });
       }
       Object.entries(extras).forEach(([k, v]) => el.setAttribute(k, v));
       if (supportsSubmit(type)) el.setAttribute('data-submit-target', target);
@@ -164,13 +186,9 @@
     }
 
     function setPanelBg(panel, type) { panel.classList.toggle('is-minimal', isMinimal(type)); }
-    function syncColor(which, color) {
-      document.getElementById(`hexInput${which}`).value = color;
-      document.getElementById(`colorWheel${which}`).value = color;
-    }
 
-    let left = { type:'new-car-funnel', color:'#303745', target:'parent' };
-    let right = { type:'new-car-funnel', color:'#de2828', target:'parent' };
+    let left = { type:'new-car-funnel', color:'#303745', target:'parent', carousel:{ make:'Chevrolet', model:'Blazer', bodyStyle:'SUV', priceMax:'40000' } };
+    let right = { type:'new-car-funnel', color:'#de2828', target:'parent', carousel:{ make:'Ford', model:'F-150', bodyStyle:'Truck', priceMax:'50000' } };
 
     const panelA = document.getElementById('panelA');
     const panelB = document.getElementById('panelB');
@@ -178,6 +196,8 @@
     const panelB2 = document.getElementById('panelB2');
     const slotA = document.getElementById('slotA');
     const slotB = document.getElementById('slotB');
+    const helperA = document.getElementById('helperA');
+    const helperB = document.getElementById('helperB');
     const slotA_stack = document.getElementById('slotA_stack');
     const slotB_stack = document.getElementById('slotB_stack');
     const instA = new dtc.Widget({slot:1});
@@ -185,8 +205,29 @@
     const instA2 = new dtc.Widget({slot:3});
     const instB2 = new dtc.Widget({slot:4});
 
+    function syncColor(which, color) {
+      document.getElementById(`hexInput${which}`).value = color;
+      document.getElementById(`colorWheel${which}`).value = color;
+    }
+
+    function syncCarousel(which, carousel) {
+      document.getElementById(`carouselMake${which}`).value = carousel.make;
+      document.getElementById(`carouselModel${which}`).value = carousel.model;
+      document.getElementById(`carouselBody${which}`).value = carousel.bodyStyle;
+      document.getElementById(`carouselPrice${which}`).value = carousel.priceMax;
+    }
+
+    function syncControls(which, state) {
+      const carouselMode = isCarousel(state.type);
+      document.getElementById(`color${which}`).style.display = carouselMode ? 'none' : '';
+      document.getElementById(`carousel${which}`).style.display = carouselMode ? '' : 'none';
+      document.getElementById(`helper${which}`).style.display = carouselMode ? '' : 'none';
+    }
+
     async function render() {
       [[panelA,left], [panelB,right], [panelA2,left], [panelB2,right]].forEach(([p,s]) => setPanelBg(p, s.type));
+      syncControls('A', left);
+      syncControls('B', right);
       [slotA,slotB,slotA_stack,slotB_stack].forEach((s) => s.innerHTML = '');
       const elA = buildEl(left);
       const elB = buildEl(right);
@@ -196,6 +237,7 @@
       slotA_stack.appendChild(elA2); slotB_stack.appendChild(elB2);
       await instA.render(elA); await instB.render(elB); await instA2.render(elA2); await instB2.render(elB2);
       syncColor('A', left.color); syncColor('B', right.color);
+      syncCarousel('A', left.carousel); syncCarousel('B', right.carousel);
     }
 
     async function rerender() {
@@ -244,6 +286,16 @@
       });
     }
 
+    function wireCarousel(which) {
+      const target = which === 'A' ? left : right;
+      [['Make','make'],['Model','model'],['Body','bodyStyle'],['Price','priceMax']].forEach(([field, key]) => {
+        document.getElementById(`carousel${field}${which}`).addEventListener('change', async (event) => {
+          target.carousel[key] = event.target.value;
+          await rerender();
+        });
+      });
+    }
+
     function wireTarget(groupId, which) {
       document.querySelectorAll(`#${groupId} .btn`).forEach((btn) => {
         btn.addEventListener('click', async () => {
@@ -255,8 +307,8 @@
       });
     }
 
-    wireType('typeA','A'); wireColor('colorA','A'); wireHex('applyHexA','hexInputA','A'); wireWheel('colorWheelA','A'); wireTarget('targetA','A');
-    wireType('typeB','B'); wireColor('colorB','B'); wireHex('applyHexB','hexInputB','B'); wireWheel('colorWheelB','B'); wireTarget('targetB','B');
+    wireType('typeA','A'); wireColor('colorA','A'); wireHex('applyHexA','hexInputA','A'); wireWheel('colorWheelA','A'); wireCarousel('A'); wireTarget('targetA','A');
+    wireType('typeB','B'); wireColor('colorB','B'); wireHex('applyHexB','hexInputB','B'); wireWheel('colorWheelB','B'); wireCarousel('B'); wireTarget('targetB','B');
     document.getElementById('targetA').style.display = supportsSubmit(left.type) ? '' : 'none';
     document.getElementById('targetB').style.display = supportsSubmit(right.type) ? '' : 'none';
     syncColor('A', left.color); syncColor('B', right.color);
