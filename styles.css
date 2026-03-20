@@ -149,8 +149,10 @@ body{
 .layout{
   display:grid; grid-template-columns: 1fr; gap: 28px; padding: 22px 0 48px;
 }
+.layout--single{ max-width: 980px; margin-inline: auto; }
 @media (min-width: 1024px){
   .layout{ grid-template-columns: minmax(0, 1fr) 340px; align-items:start; }
+  .layout--single{ grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---- Featured ---- */
@@ -354,3 +356,16 @@ copyright, .copyright{ color:#b6bdca; margin-top:10px; font-size:.95rem; }
 /* Site shell font (widgets can still declare sofia-pro in their data-attrs) */
 :root { --shell-font: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 html, body { font-family: var(--shell-font); }
+
+
+.home-section{ display:grid; gap:16px; }
+.featured--single{ grid-template-columns:1fr; }
+.section-heading h2{ margin:0; font-size:1.5rem; color:#fff; }
+.section-heading p{ margin:4px 0 0; color:#c7ccd6; }
+.home-callout{ margin-bottom: 8px; }
+.widget-slot--padded{ padding:14px; }
+.widget-note{ margin:0 0 12px; color:#4b5563; font-weight:600; }
+.controls .hex-input input[type="color"]{ width:36px; height:36px; padding:0; border:none; background:transparent; cursor:pointer; }
+.controls .hex-input input[type="color"]::-webkit-color-swatch-wrapper{ padding:0; }
+.controls .hex-input input[type="color"]::-webkit-color-swatch{ border:none; border-radius:999px; }
+.controls .hex-input input[type="color"]::-moz-color-swatch{ border:none; border-radius:999px; }
