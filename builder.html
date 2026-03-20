@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Widget Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container header__inner">
+      <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">⬤</span><span class="brand__text">AutoFinder Demo Lab</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">☰</button>
+      <nav class="site-nav" id="siteNav" aria-label="Primary">
+        <a href="./">Home</a>
+        <a href="./widget.html">Widget Test</a>
+        <a href="./quotes.html">Widget Comparison</a>
+        <a href="./builder.html" class="is-active">Widget Builder</a>
+        <a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero__inner">
+      <h1 class="hero__title">Widget Builder</h1>
+      <p class="hero__dek">Build a widget with the full valid option set, preview it live, and copy either the exact configured markup or a reusable base snippet.</p>
+      <div class="pill-nav" role="navigation" aria-label="Demo pages">
+        <a class="pill" href="./">Home</a>
+        <a class="pill" href="./widget.html">Widget Test</a>
+        <a class="pill" href="./quotes.html">Widget Comparison</a>
+        <a class="pill is-active" href="./builder.html">Widget Builder</a>
+        <a class="pill" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container builder-page">
+    <section class="widget-box builder-intro">
+      <h2 class="widget-box__title">Advanced builder</h2>
+      <div class="widget-slot widget-slot--padded builder-intro__body">
+        <p>Use this page when you need more than a simple type/color test. It supports all documented core options: widget type, theme, submit target, query-string behavior, tracking IDs, preselected vehicle values, pricing filters, fonts, and colors.</p>
+      </div>
+    </section>
+
+    <section class="builder-grid">
+      <form class="builder-form" id="builderForm">
+        <div class="builder-section">
+          <h2>Widget</h2>
+          <div class="builder-fields two-col">
+            <label>
+              <span>Widget type</span>
+              <select id="widgetType"></select>
+            </label>
+            <label>
+              <span>Theme</span>
+              <select id="widgetTheme"></select>
+            </label>
+            <label>
+              <span>Submit target</span>
+              <select id="submitTarget"></select>
+            </label>
+            <label class="checkbox-field">
+              <input type="checkbox" id="useQs" />
+              <span>Enable query string overrides</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h2>IDs & tracking</h2>
+          <div class="builder-fields two-col">
+            <label><span>Generator ID</span><input id="gid" type="text" value="0000-5200" /></label>
+            <label><span>Tenant</span><input id="tenant" type="text" value="AF30949" /></label>
+            <label><span>Campaign ID</span><input id="cid" type="text" placeholder="SpringSUVPush" /></label>
+            <label><span>Source ID</span><input id="sid" type="text" placeholder="BuilderDemoPage" /></label>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h2>Vehicle defaults</h2>
+          <div class="builder-fields three-col">
+            <label><span>Make</span><select id="make"></select></label>
+            <label><span>Model</span><select id="model"></select></label>
+            <label><span>Body type</span><select id="bodyType"></select></label>
+            <label><span>Price range</span><select id="priceRange"></select></label>
+            <label><span>Monthly budget</span><select id="budget"></select></label>
+            <label><span>Condition</span><select id="condition"></select></label>
+            <label><span>ZIP / postal code</span><input id="zip" type="text" placeholder="75001" /></label>
+            <label><span>Min price</span><input id="minPrice" type="number" min="0" step="500" placeholder="10000" /></label>
+            <label><span>Max price</span><input id="maxPrice" type="number" min="0" step="500" placeholder="45000" /></label>
+            <label><span>Min year</span><input id="minYear" type="number" min="1990" max="2035" placeholder="2019" /></label>
+            <label><span>Max year</span><input id="maxYear" type="number" min="1990" max="2035" placeholder="2026" /></label>
+          </div>
+        </div>
+
+        <div class="builder-section">
+          <h2>Branding</h2>
+          <div class="builder-fields two-col">
+            <label><span>Primary color</span><div class="builder-color"><input id="colorPrimary" type="color" value="#de2828" /><input id="colorPrimaryText" type="text" value="#de2828" maxlength="32" /></div></label>
+            <label><span>Secondary color</span><div class="builder-color"><input id="colorSecondary" type="color" value="#111111" /><input id="colorSecondaryText" type="text" value="#111111" maxlength="32" /></div></label>
+            <label><span>Headline color</span><div class="builder-color"><input id="colorHeadline" type="color" value="#111111" /><input id="colorHeadlineText" type="text" value="#111111" maxlength="32" /></div></label>
+            <label><span>Primary font</span><select id="fontPrimary"></select></label>
+            <label><span>Secondary font</span><select id="fontSecondary"></select></label>
+          </div>
+        </div>
+      </form>
+
+      <div class="builder-preview-wrap">
+        <section class="quotes-card demo-panel builder-preview-card" id="builderPreviewPanel">
+          <div class="demo-helper" id="builderHelper"></div>
+          <div id="builderPreview"></div>
+        </section>
+
+        <section class="codebox">
+          <div class="bar">
+            <span>Copy configured embed snippet</span>
+            <button class="copy-btn" id="copyBuilderConfigured" type="button">Copy</button>
+          </div>
+          <pre><code id="builderSnippetConfigured"></code></pre>
+        </section>
+
+        <section class="codebox codebox--secondary">
+          <div class="bar">
+            <span>Copy reusable base snippet</span>
+            <button class="copy-btn" id="copyBuilderBase" type="button">Copy</button>
+          </div>
+          <pre><code id="builderSnippetBase"></code></pre>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a><a href="./builder.html">Widget Builder</a><a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
+      </nav>
+      <p class="copyright">© <span id="year"></span> Demo Media.</p>
+    </div>
+  </footer>
+
+  <script src="https://www.rydeshopper.com/app/shoppingtools/scripts/widget.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const dtc = window.dtc;
+    const instance = new dtc.Widget({ slot: 1 });
+    const previewRoot = document.getElementById('builderPreview');
+    const previewPanel = document.getElementById('builderPreviewPanel');
+    const helper = document.getElementById('builderHelper');
+    const VALID_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^(rgb|rgba|hsl|hsla)\(/;
+
+    const widgetTypes = [
+      { value: 'new-car-funnel', label: 'New Car Funnel', className: 'dt-new-car-funnel', themes: ['', 'compact'], supports: ['make', 'model', 'zip', 'useQs', 'cid', 'sid', 'primaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'new-car-quote', label: 'New Car Quote', className: 'dt-new-car-quote', themes: ['', 'minimal'], supports: ['make', 'model', 'zip', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'secondaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'used-car-quote', label: 'Used Car Quote', className: 'dt-used-car-quote', themes: ['', 'minimal'], supports: ['bodyType', 'priceRange', 'budget', 'zip', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'secondaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'new-car-image', label: 'New Car Image', className: 'dt-new-car-image', themes: ['', 'compact'], supports: ['make', 'model', 'zip', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'used-car-image', label: 'Used Car Image', className: 'dt-used-car-image', themes: [''], supports: ['bodyType', 'priceRange', 'budget', 'zip', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'calculator', label: 'Car Payment Calculator', className: 'dt-car-payment-calculator', themes: [''], supports: ['zip', 'minPrice', 'maxPrice', 'condition', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'used-pay-body', label: 'Used Payment + Body Type', className: 'dt-used-car-payment-body-type', themes: [''], supports: ['bodyType', 'budget', 'zip', 'minYear', 'maxYear', 'minPrice', 'maxPrice', 'condition', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'used-pay-mm', label: 'Used Payment + Make/Model', className: 'dt-used-car-payment-makes-models', themes: [''], supports: ['make', 'model', 'budget', 'zip', 'minYear', 'maxYear', 'minPrice', 'maxPrice', 'condition', 'useQs', 'cid', 'sid', 'submitTarget', 'primaryColor', 'headlineColor', 'fontPrimary', 'fontSecondary'] },
+      { value: 'inventory-carousel', label: 'Inventory Carousel', className: 'dt-inventory-carousel', themes: [''], supports: ['make', 'model', 'zip', 'bodyType', 'priceRange', 'budget', 'minYear', 'maxYear', 'minPrice', 'maxPrice', 'condition', 'useQs', 'cid', 'sid'] }
+    ];
+
+    const makeModels = {
+      '': [''],
+      Chevrolet: ['', 'Blazer', 'Equinox', 'Silverado 1500', 'Tahoe'],
+      Ford: ['', 'Bronco', 'Escape', 'F-150', 'Explorer'],
+      Jeep: ['', 'Grand Cherokee', 'Wrangler', 'Compass', 'Gladiator'],
+      Toyota: ['', '4Runner', 'Camry', 'RAV4', 'Tacoma'],
+      Honda: ['', 'Accord', 'CR-V', 'Civic', 'Pilot']
+    };
+    const bodyTypes = ['', 'Sedan', 'SUV', 'Pickup', 'Coupe', 'Hatchback', 'Van'];
+    const priceRanges = ['', '0,15000', '15000,25000', '25000,35000', '35000,50000', '50000,75000'];
+    const budgets = ['', '250', '350', '450', '550', '650', '750'];
+    const conditions = ['', 'New', 'Used', 'Certified'];
+    const fonts = ['Poppins', 'Arial', 'Helvetica', 'Verdana', 'Georgia', 'Tahoma', 'Trebuchet MS'];
+    const targets = [
+      { value: 'parent', label: 'Parent / same tab' },
+      { value: 'blank', label: 'New tab' },
+      { value: 'self', label: 'Self frame' }
+    ];
+
+    const fields = {
+      widgetType: document.getElementById('widgetType'),
+      widgetTheme: document.getElementById('widgetTheme'),
+      submitTarget: document.getElementById('submitTarget'),
+      useQs: document.getElementById('useQs'),
+      gid: document.getElementById('gid'),
+      tenant: document.getElementById('tenant'),
+      cid: document.getElementById('cid'),
+      sid: document.getElementById('sid'),
+      make: document.getElementById('make'),
+      model: document.getElementById('model'),
+      bodyType: document.getElementById('bodyType'),
+      priceRange: document.getElementById('priceRange'),
+      budget: document.getElementById('budget'),
+      condition: document.getElementById('condition'),
+      zip: document.getElementById('zip'),
+      minPrice: document.getElementById('minPrice'),
+      maxPrice: document.getElementById('maxPrice'),
+      minYear: document.getElementById('minYear'),
+      maxYear: document.getElementById('maxYear'),
+      colorPrimary: document.getElementById('colorPrimary'),
+      colorPrimaryText: document.getElementById('colorPrimaryText'),
+      colorSecondary: document.getElementById('colorSecondary'),
+      colorSecondaryText: document.getElementById('colorSecondaryText'),
+      colorHeadline: document.getElementById('colorHeadline'),
+      colorHeadlineText: document.getElementById('colorHeadlineText'),
+      fontPrimary: document.getElementById('fontPrimary'),
+      fontSecondary: document.getElementById('fontSecondary')
+    };
+
+    function fillSelect(select, options, mapFn = (value) => ({ value, label: value || 'None' })) {
+      select.innerHTML = options.map((option) => {
+        const item = typeof option === 'string' ? mapFn(option) : option;
+        return `<option value="${item.value}">${item.label}</option>`;
+      }).join('');
+    }
+
+    fillSelect(fields.widgetType, widgetTypes.map((item) => ({ value: item.value, label: item.label })));
+    fillSelect(fields.make, Object.keys(makeModels), (value) => ({ value, label: value || 'None' }));
+    fillSelect(fields.bodyType, bodyTypes);
+    fillSelect(fields.priceRange, priceRanges, (value) => ({ value, label: value ? value.replace(',', ' - $').replace(/^/, '$') : 'None' }));
+    fillSelect(fields.budget, budgets, (value) => ({ value, label: value ? `$${value}/mo` : 'None' }));
+    fillSelect(fields.condition, conditions);
+    fillSelect(fields.submitTarget, targets);
+    fillSelect(fields.fontPrimary, fonts);
+    fillSelect(fields.fontSecondary, fonts);
+
+    const defaultState = {
+      widgetType: 'new-car-funnel',
+      widgetTheme: '',
+      submitTarget: 'parent',
+      useQs: true,
+      gid: '0000-5200',
+      tenant: 'AF30949',
+      cid: '',
+      sid: '',
+      make: 'Chevrolet',
+      model: 'Blazer',
+      bodyType: 'SUV',
+      priceRange: '25000,35000',
+      budget: '550',
+      condition: 'Used',
+      zip: '75001',
+      minPrice: '',
+      maxPrice: '',
+      minYear: '',
+      maxYear: '',
+      colorPrimary: '#de2828',
+      colorSecondary: '#111111',
+      colorHeadline: '#111111',
+      fontPrimary: 'Poppins',
+      fontSecondary: 'Poppins'
+    };
+
+    Object.entries(defaultState).forEach(([key, value]) => {
+      const field = fields[key];
+      if (!field) return;
+      if (field.type === 'checkbox') field.checked = Boolean(value);
+      else field.value = value;
+    });
+    fields.colorPrimaryText.value = defaultState.colorPrimary;
+    fields.colorSecondaryText.value = defaultState.colorSecondary;
+    fields.colorHeadlineText.value = defaultState.colorHeadline;
+
+    function activeType() {
+      return widgetTypes.find((item) => item.value === fields.widgetType.value) || widgetTypes[0];
+    }
+
+    function syncModels() {
+      const current = fields.model.value;
+      fillSelect(fields.model, makeModels[fields.make.value] || ['']);
+      fields.model.value = (makeModels[fields.make.value] || ['']).includes(current) ? current : '';
+    }
+
+    function syncThemes() {
+      const type = activeType();
+      fillSelect(fields.widgetTheme, type.themes, (value) => ({ value, label: value ? value[0].toUpperCase() + value.slice(1) : 'Default' }));
+    }
+
+    function supported(name) {
+      return activeType().supports.includes(name);
+    }
+
+    function setAvailability() {
+      document.querySelectorAll('.builder-fields label').forEach((label) => {
+        const control = label.querySelector('input, select');
+        if (!control || !control.id || ['widgetType', 'widgetTheme', 'gid', 'tenant'].includes(control.id)) return;
+        const supportKey = {
+          submitTarget: 'submitTarget', useQs: 'useQs', cid: 'cid', sid: 'sid', make: 'make', model: 'model', bodyType: 'bodyType', priceRange: 'priceRange', budget: 'budget', condition: 'condition', zip: 'zip', minPrice: 'minPrice', maxPrice: 'maxPrice', minYear: 'minYear', maxYear: 'maxYear', colorPrimary: 'primaryColor', colorPrimaryText: 'primaryColor', colorSecondary: 'secondaryColor', colorSecondaryText: 'secondaryColor', colorHeadline: 'headlineColor', colorHeadlineText: 'headlineColor', fontPrimary: 'fontPrimary', fontSecondary: 'fontSecondary'
+        }[control.id];
+        if (!supportKey) return;
+        const enabled = supported(supportKey);
+        label.classList.toggle('is-disabled', !enabled);
+        control.disabled = !enabled;
+      });
+    }
+
+    function normalizeColorPair(colorInput, textInput) {
+      textInput.addEventListener('change', () => {
+        const value = textInput.value.trim();
+        if (VALID_COLOR.test(value)) {
+          if (value.startsWith('#')) colorInput.value = value;
+        } else {
+          textInput.value = colorInput.value;
+        }
+        renderBuilder();
+      });
+      colorInput.addEventListener('input', () => {
+        textInput.value = colorInput.value;
+        renderBuilder();
+      });
+    }
+
+    function getState() {
+      return {
+        widgetType: fields.widgetType.value,
+        widgetTheme: fields.widgetTheme.value,
+        submitTarget: fields.submitTarget.value,
+        useQs: fields.useQs.checked,
+        gid: fields.gid.value.trim(),
+        tenant: fields.tenant.value.trim(),
+        cid: fields.cid.value.trim(),
+        sid: fields.sid.value.trim(),
+        make: fields.make.value,
+        model: fields.model.value,
+        bodyType: fields.bodyType.value,
+        priceRange: fields.priceRange.value,
+        budget: fields.budget.value,
+        condition: fields.condition.value,
+        zip: fields.zip.value.trim(),
+        minPrice: fields.minPrice.value.trim(),
+        maxPrice: fields.maxPrice.value.trim(),
+        minYear: fields.minYear.value.trim(),
+        maxYear: fields.maxYear.value.trim(),
+        colorPrimary: fields.colorPrimaryText.value.trim(),
+        colorSecondary: fields.colorSecondaryText.value.trim(),
+        colorHeadline: fields.colorHeadlineText.value.trim(),
+        fontPrimary: fields.fontPrimary.value,
+        fontSecondary: fields.fontSecondary.value
+      };
+    }
+
+    function buildAttributes(state, includeValues = true) {
+      const type = activeType();
+      const attrs = {
+        class: type.className,
+        'data-gid': state.gid || defaultState.gid,
+        'data-tenant': state.tenant || defaultState.tenant
+      };
+      if (includeValues) {
+        if (state.widgetTheme) attrs['data-theme'] = state.widgetTheme;
+        if (supported('submitTarget')) attrs['data-submit-target'] = state.submitTarget;
+        if (supported('useQs') && state.useQs) {
+          attrs['use-qs'] = 'true';
+          attrs['data-use-qs'] = 'true';
+        }
+        if (supported('cid') && state.cid) attrs['data-cid'] = state.cid;
+        if (supported('sid') && state.sid) attrs['data-sid'] = state.sid;
+        if (supported('make') && state.make) attrs['data-make'] = state.make;
+        if (supported('model') && state.make && state.model) attrs['data-model'] = state.model;
+        if (supported('bodyType') && state.bodyType) attrs['data-body-type'] = state.bodyType;
+        if (supported('priceRange') && state.priceRange) attrs['data-price-range'] = state.priceRange;
+        if (supported('budget') && state.budget) attrs['data-budget'] = state.budget;
+        if (supported('condition') && state.condition) attrs['data-condition'] = state.condition;
+        if (supported('zip') && state.zip) attrs['data-zip'] = state.zip;
+        if (supported('minPrice') && state.minPrice) attrs['data-min-price'] = state.minPrice;
+        if (supported('maxPrice') && state.maxPrice) attrs['data-max-price'] = state.maxPrice;
+        if (supported('minYear') && state.minYear) attrs['data-min-year'] = state.minYear;
+        if (supported('maxYear') && state.maxYear) attrs['data-max-year'] = state.maxYear;
+        if (supported('primaryColor') && state.colorPrimary) attrs['data-color-primary'] = state.colorPrimary;
+        if (supported('secondaryColor') && state.colorSecondary) attrs['data-color-secondary'] = state.colorSecondary;
+        if (supported('headlineColor') && state.colorHeadline) attrs['data-color-headline'] = state.colorHeadline;
+        if (supported('fontPrimary') && state.fontPrimary) attrs['data-font-primary'] = state.fontPrimary;
+        if (supported('fontSecondary') && state.fontSecondary) attrs['data-font-secondary'] = state.fontSecondary;
+      }
+      return attrs;
+    }
+
+    function snippetFromAttrs(attrs) {
+      const lines = Object.entries(attrs).map(([key, value], index) => index === 0 ? `${key}="${value}"` : `  ${key}="${value}"`);
+      return `<div ${lines[0]}\n${lines.slice(1).join('\n')}></div>`;
+    }
+
+    async function renderBuilder() {
+      syncModels();
+      syncThemes();
+      setAvailability();
+      const state = getState();
+      previewRoot.innerHTML = '';
+      const attrs = buildAttributes(state, true);
+      const element = document.createElement('div');
+      Object.entries(attrs).forEach(([key, value]) => {
+        if (key === 'class') element.className = value;
+        else element.setAttribute(key, value);
+      });
+      previewRoot.appendChild(element);
+      helper.textContent = `${activeType().label}${state.widgetTheme ? ` · ${state.widgetTheme} theme` : ''}${state.useQs && supported('useQs') ? ' · query string ready' : ''}`;
+      previewPanel.classList.toggle('is-minimal', state.widgetTheme === 'minimal');
+      await instance.unmount();
+      await instance.render(element);
+      document.getElementById('builderSnippetConfigured').textContent = snippetFromAttrs(attrs);
+      document.getElementById('builderSnippetBase').textContent = snippetFromAttrs(buildAttributes(state, false));
+    }
+
+    fields.make.addEventListener('change', () => { syncModels(); renderBuilder(); });
+    fields.widgetType.addEventListener('change', () => { syncThemes(); setAvailability(); renderBuilder(); });
+    document.querySelectorAll('#builderForm input, #builderForm select').forEach((field) => {
+      if (field.id === 'make' || field.id === 'widgetType' || field.id.startsWith('color')) return;
+      field.addEventListener(field.type === 'checkbox' ? 'change' : 'input', renderBuilder);
+      if (field.tagName === 'SELECT') field.addEventListener('change', renderBuilder);
+    });
+    normalizeColorPair(fields.colorPrimary, fields.colorPrimaryText);
+    normalizeColorPair(fields.colorSecondary, fields.colorSecondaryText);
+    normalizeColorPair(fields.colorHeadline, fields.colorHeadlineText);
+
+    document.getElementById('copyBuilderConfigured').onclick = () => navigator.clipboard.writeText(document.getElementById('builderSnippetConfigured').textContent);
+    document.getElementById('copyBuilderBase').onclick = () => navigator.clipboard.writeText(document.getElementById('builderSnippetBase').textContent);
+
+    syncModels();
+    syncThemes();
+    setAvailability();
+    renderBuilder();
+  </script>
+  <script src="./app.js"></script>
+</body>
+</html>
