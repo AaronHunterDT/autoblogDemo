@@ -95,6 +95,10 @@
     const instance = new dtc.Widget({ slot: 1 });
     const params = new URLSearchParams(window.location.search);
     const fallbackState = { make: 'Jeep', model: 'Grand Cherokee', zip: '75001' };
+    function normalizeValue(value, fallback = '') {
+      return (value || fallback).trim().replace(/\s+/g, ' ').toLowerCase();
+    }
+
     const state = {
       make: params.get('make') || fallbackState.make,
       model: params.get('model') || fallbackState.model,
@@ -119,8 +123,14 @@
     }
 
     function syncQuickLinkState() {
+      const activeMake = normalizeValue(state.make, fallbackState.make);
+      const activeModel = normalizeValue(state.model, fallbackState.model);
+
       document.querySelectorAll('.demo-chip-row .pill').forEach((link) => {
-        const isActive = link.dataset.make === state.make && link.dataset.model === state.model;
+        const linkUrl = new URL(link.href, window.location.href);
+        const linkMake = normalizeValue(linkUrl.searchParams.get('make'), link.dataset.make || fallbackState.make);
+        const linkModel = normalizeValue(linkUrl.searchParams.get('model'), link.dataset.model || fallbackState.model);
+        const isActive = linkMake === activeMake && linkModel === activeModel;
         link.classList.toggle('is-active', isActive);
 
         if (isActive) {
