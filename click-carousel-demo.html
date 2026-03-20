@@ -48,9 +48,9 @@
           <li>The embed uses <strong>widget.js</strong> instance rendering so the page fits the dynamic loading guidance for SPA-like demos.</li>
         </ul>
         <div class="demo-chip-row" aria-label="Quick links">
-          <a class="pill is-active" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Jeep Grand Cherokee</a>
-          <a class="pill" href="./click-carousel-demo.html?make=Jeep&model=Wrangler&zip=75001">Jeep Wrangler</a>
-          <a class="pill" href="./click-carousel-demo.html?make=Toyota&model=4Runner&zip=75001">Toyota 4Runner</a>
+          <a class="pill" data-make="Jeep" data-model="Grand Cherokee" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Jeep Grand Cherokee</a>
+          <a class="pill" data-make="Jeep" data-model="Wrangler" href="./click-carousel-demo.html?make=Jeep&model=Wrangler&zip=75001">Jeep Wrangler</a>
+          <a class="pill" data-make="Toyota" data-model="4Runner" href="./click-carousel-demo.html?make=Toyota&model=4Runner&zip=75001">Toyota 4Runner</a>
         </div>
       </div>
     </section>
@@ -118,6 +118,19 @@
       return `<div class="dt-inventory-carousel"\n  data-gid="0000-5200"\n  data-tenant="AF30949"\n  data-make="${make}"\n  data-model="${model}"\n  data-zip="${zip}"\n  use-qs="true"\n  data-use-qs="true"></div>`;
     }
 
+    function syncQuickLinkState() {
+      document.querySelectorAll('.demo-chip-row .pill').forEach((link) => {
+        const isActive = link.dataset.make === state.make && link.dataset.model === state.model;
+        link.classList.toggle('is-active', isActive);
+
+        if (isActive) {
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
     async function renderCarousel() {
       root.innerHTML = '';
       const el = buildCarouselEl(state);
@@ -125,6 +138,7 @@
       await instance.render(el);
       document.getElementById('carouselSnippet').textContent = snippetFor(state);
       document.getElementById('carouselUrl').textContent = window.location.href;
+      syncQuickLinkState();
     }
 
     document.getElementById('copyCarouselSnippet').onclick = () => navigator.clipboard.writeText(document.getElementById('carouselSnippet').textContent);
