@@ -18,6 +18,7 @@
         <a href="./">Home</a>
         <a href="./widget.html">Widget Test</a>
         <a href="./quotes.html">Widget Comparison</a>
+        <a href="./builder.html">Widget Builder</a>
         <a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001" class="is-active">Click Carousel Demo</a>
       </nav>
     </div>
@@ -31,6 +32,7 @@
         <a class="pill" href="./">Home</a>
         <a class="pill" href="./widget.html">Widget Test</a>
         <a class="pill" href="./quotes.html">Widget Comparison</a>
+        <a class="pill" href="./builder.html">Widget Builder</a>
         <a class="pill is-active" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
       </div>
     </div>
@@ -68,6 +70,14 @@
       <pre><code id="carouselSnippet"></code></pre>
     </section>
 
+    <section class="codebox codebox--secondary" style="margin-top:12px;">
+      <div class="bar">
+        <span>Copy embed snippet without make/model/zip defaults</span>
+        <button class="copy-btn" id="copyCarouselSnippetBase">Copy</button>
+      </div>
+      <pre><code id="carouselSnippetBase"></code></pre>
+    </section>
+
     <section class="codebox" style="margin-top:12px;">
       <div class="bar">
         <span>Shareable demo URL</span>
@@ -80,7 +90,8 @@
   <footer class="site-footer">
     <div class="container footer__inner">
       <nav class="footer-nav" aria-label="Footer">
-        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a><a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
+        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a>
+        <a href="./builder.html">Widget Builder</a><a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
       </nav>
       <p class="copyright">© <span id="year"></span> Demo Media.</p>
     </div>
@@ -118,8 +129,17 @@
       return el;
     }
 
-    function snippetFor({ make, model, zip }) {
-      return `<div class="dt-inventory-carousel"\n  data-gid="0000-5200"\n  data-tenant="AF30949"\n  data-make="${make}"\n  data-model="${model}"\n  data-zip="${zip}"\n  use-qs="true"\n  data-use-qs="true"></div>`;
+    function snippetFor({ make, model, zip }, includeDefaults = true) {
+      const attrs = [
+        'class="dt-inventory-carousel"',
+        '  data-gid="0000-5200"',
+        '  data-tenant="AF30949"'
+      ];
+      if (includeDefaults) {
+        attrs.push(`  data-make="${make}"`, `  data-model="${model}"`, `  data-zip="${zip}"`);
+      }
+      attrs.push('  use-qs="true"', '  data-use-qs="true"');
+      return `<div ${attrs[0]}\n${attrs.slice(1).join('\n')}></div>`;
     }
 
     function syncQuickLinkState() {
@@ -147,11 +167,13 @@
       root.appendChild(el);
       await instance.render(el);
       document.getElementById('carouselSnippet').textContent = snippetFor(state);
+      document.getElementById('carouselSnippetBase').textContent = snippetFor(state, false);
       document.getElementById('carouselUrl').textContent = window.location.href;
       syncQuickLinkState();
     }
 
     document.getElementById('copyCarouselSnippet').onclick = () => navigator.clipboard.writeText(document.getElementById('carouselSnippet').textContent);
+    document.getElementById('copyCarouselSnippetBase').onclick = () => navigator.clipboard.writeText(document.getElementById('carouselSnippetBase').textContent);
     document.getElementById('copyCarouselUrl').onclick = () => navigator.clipboard.writeText(document.getElementById('carouselUrl').textContent);
 
     renderCarousel();

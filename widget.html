@@ -17,6 +17,7 @@
         <a href="./">Home</a>
         <a href="./widget.html" class="is-active">Widget Test</a>
         <a href="./quotes.html">Widget Comparison</a>
+        <a href="./builder.html">Widget Builder</a>
       </nav>
     </div>
   </header>
@@ -29,6 +30,7 @@
         <a class="pill" href="./">Home</a>
         <a class="pill is-active" href="./widget.html">Widget Test</a>
         <a class="pill" href="./quotes.html">Widget Comparison</a>
+        <a class="pill" href="./builder.html">Widget Builder</a>
       </div>
     </div>
   </section>
@@ -85,6 +87,14 @@
       <pre><code id="codeSingle"></code></pre>
     </section>
 
+    <section class="codebox codebox--secondary" style="margin-top:12px;">
+      <div class="bar">
+        <span>Copy embed snippet without make/model defaults</span>
+        <button class="copy-btn" id="copySingleBase">Copy</button>
+      </div>
+      <pre><code id="codeSingleBase"></code></pre>
+    </section>
+
     <section class="codebox" style="margin-top:12px;">
       <div class="bar">
         <span>Script tag — place before &lt;/body&gt;</span>
@@ -97,7 +107,7 @@
   <footer class="site-footer">
     <div class="container footer__inner">
       <nav class="footer-nav" aria-label="Footer">
-        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a>
+        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a><a href="./builder.html">Widget Builder</a>
       </nav>
       <p class="copyright">© <span id="year"></span> Demo Media.</p>
     </div>
@@ -163,9 +173,9 @@
       return el;
     }
 
-    function snippetFor({ type, color, target }) {
+    function buildAttrs({ type, color, target }, includeDefaults = true) {
       const [klass, extras] = classFor(type);
-      const attrs = {
+      return {
         class: klass,
         'data-gid': '0000-5200',
         'data-tenant': 'AF30949',
@@ -173,9 +183,13 @@
         'data-font-primary': 'Poppins',
         'data-font-secondary': 'Poppins',
         ...(supportsSubmit(type) ? { 'data-submit-target': target } : {}),
-        ...(klass === 'dt-new-car-funnel' ? { 'data-make': 'Chevrolet', 'data-model': 'Blazer' } : {}),
+        ...(includeDefaults && klass === 'dt-new-car-funnel' ? { 'data-make': 'Chevrolet', 'data-model': 'Blazer' } : {}),
         ...extras
       };
+    }
+
+    function snippetFor(config, includeDefaults = true) {
+      const attrs = buildAttrs(config, includeDefaults);
       const lines = Object.entries(attrs).map(([k, v]) => k === 'class' ? `class="${v}"` : `  ${k}="${v}"`);
       return `<div ${lines[0]}\n${lines.slice(1).join('\n')}></div>`;
     }
@@ -196,6 +210,7 @@
       root.appendChild(el);
       await instance.render(el);
       document.getElementById('codeSingle').textContent = snippetFor(state);
+      document.getElementById('codeSingleBase').textContent = snippetFor(state, false);
       document.getElementById('targetControls').style.display = supportsSubmit(state.type) ? '' : 'none';
       syncColorInputs(state.color);
     }
@@ -250,6 +265,7 @@
     });
 
     document.getElementById('copySingle').onclick = () => navigator.clipboard.writeText(document.getElementById('codeSingle').textContent);
+    document.getElementById('copySingleBase').onclick = () => navigator.clipboard.writeText(document.getElementById('codeSingleBase').textContent);
     document.getElementById('copyInlineSingle').onclick = () => navigator.clipboard.writeText(document.getElementById('codeInlineSingle').textContent);
 
     syncColorInputs(state.color);
