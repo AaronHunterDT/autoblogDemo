@@ -24,7 +24,7 @@
   <section class="hero">
     <div class="container hero__inner">
       <h1 class="hero__title">Widget Test</h1>
-      <p class="hero__dek">Test one widget at a time, including the click carousel. Pick a preset swatch, use the color wheel, or paste a HEX value, then copy the embed.</p>
+      <p class="hero__dek">Test one widget at a time. For click carousel demos, switch vehicle filters to preview make/model/body style/price behaviors instead of color/font options.</p>
     </div>
   </section>
 
@@ -62,6 +62,53 @@
         </div>
       </div>
 
+      <div class="group filter-group" id="carouselControlsSingle" style="display:none;">
+        <span class="label">Carousel filters:</span>
+        <label>
+          <span>Make</span>
+          <select id="carouselMakeSingle">
+            <option value="">Any make</option>
+            <option value="Chevrolet">Chevrolet</option>
+            <option value="Ford">Ford</option>
+            <option value="Honda">Honda</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Jeep">Jeep</option>
+          </select>
+        </label>
+        <label>
+          <span>Model</span>
+          <select id="carouselModelSingle">
+            <option value="">Any model</option>
+            <option value="Blazer">Blazer</option>
+            <option value="Equinox">Equinox</option>
+            <option value="F-150">F-150</option>
+            <option value="CR-V">CR-V</option>
+            <option value="RAV4">RAV4</option>
+            <option value="Wrangler">Wrangler</option>
+          </select>
+        </label>
+        <label>
+          <span>Body style</span>
+          <select id="carouselBodySingle">
+            <option value="">Any body style</option>
+            <option value="SUV">SUV</option>
+            <option value="Sedan">Sedan</option>
+            <option value="Truck">Truck</option>
+            <option value="Coupe">Coupe</option>
+          </select>
+        </label>
+        <label>
+          <span>Max price</span>
+          <select id="carouselPriceSingle">
+            <option value="">Any price</option>
+            <option value="30000">Under $30k</option>
+            <option value="40000">Under $40k</option>
+            <option value="50000">Under $50k</option>
+            <option value="65000">Under $65k</option>
+          </select>
+        </label>
+      </div>
+
       <div class="group" id="targetControls" style="display:none;">
         <span class="label">Submit:</span>
         <button class="btn is-active" data-target="parent">Same tab</button>
@@ -70,6 +117,7 @@
     </div>
 
     <section class="quotes-card demo-panel" id="panelSingle">
+      <div class="demo-helper" id="carouselHelperSingle" style="display:none;">Click carousel does not expose demo color/font controls, so this page switches inventory filters instead.</div>
       <div id="widgetSingle"></div>
     </section>
 
@@ -103,6 +151,7 @@
     const root = document.getElementById('widgetSingle');
     const panel = document.getElementById('panelSingle');
     const VALID_HEX = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
+    const CAROUSEL_TYPE = 'inventory-carousel';
 
     const supportsSubmit = (t) => [
       'calculator', 'new-car-quote', 'new-car-quote-minimal',
@@ -112,6 +161,7 @@
     ].includes(t);
 
     const isMinimal = (t) => ['new-car-quote-minimal', 'used-car-quote-minimal'].includes(t);
+    const isCarousel = (t) => t === CAROUSEL_TYPE;
 
     function classFor(type) {
       switch (type) {
@@ -131,38 +181,66 @@
       }
     }
 
-    let state = { type: 'new-car-funnel', color: '#de2828', target: 'parent' };
+    let state = {
+      type: 'new-car-funnel',
+      color: '#de2828',
+      target: 'parent',
+      carousel: { make: 'Chevrolet', model: 'Blazer', bodyStyle: 'SUV', priceMax: '40000' }
+    };
     let instance = new dtc.Widget({ slot: 1 });
 
-    function buildRootEl({ type, color, target }) {
+    function applyCarouselAttrs(el, carousel) {
+      const mapping = {
+        make: carousel.make,
+        model: carousel.model,
+        'body-style': carousel.bodyStyle,
+        'price-max': carousel.priceMax
+      };
+      Object.entries(mapping).forEach(([key, value]) => {
+        if (value) el.setAttribute(`data-${key}`, value);
+      });
+    }
+
+    function buildRootEl({ type, color, target, carousel }) {
       const [klass, extras] = classFor(type);
       const el = document.createElement('div');
       el.className = klass;
       el.setAttribute('data-gid', '0000-5200');
       el.setAttribute('data-tenant', 'AF30949');
-      el.setAttribute('data-color-primary', color);
-      el.setAttribute('data-font-primary', 'Poppins');
-      el.setAttribute('data-font-secondary', 'Poppins');
+      if (!isCarousel(type)) {
+        el.setAttribute('data-color-primary', color);
+        el.setAttribute('data-font-primary', 'Poppins');
+        el.setAttribute('data-font-secondary', 'Poppins');
+      }
       Object.entries(extras).forEach(([k, v]) => el.setAttribute(k, v));
       if (supportsSubmit(type)) el.setAttribute('data-submit-target', target);
       if (klass === 'dt-new-car-funnel') {
         el.setAttribute('data-make', 'Chevrolet');
         el.setAttribute('data-model', 'Blazer');
       }
+      if (isCarousel(type)) applyCarouselAttrs(el, carousel);
       return el;
     }
 
-    function snippetFor({ type, color, target }) {
+    function snippetFor({ type, color, target, carousel }) {
       const [klass, extras] = classFor(type);
       const attrs = {
         class: klass,
         'data-gid': '0000-5200',
         'data-tenant': 'AF30949',
-        'data-color-primary': color,
-        'data-font-primary': 'Poppins',
-        'data-font-secondary': 'Poppins',
+        ...(isCarousel(type) ? {} : {
+          'data-color-primary': color,
+          'data-font-primary': 'Poppins',
+          'data-font-secondary': 'Poppins'
+        }),
         ...(supportsSubmit(type) ? { 'data-submit-target': target } : {}),
         ...(klass === 'dt-new-car-funnel' ? { 'data-make': 'Chevrolet', 'data-model': 'Blazer' } : {}),
+        ...(isCarousel(type) ? {
+          ...(carousel.make ? { 'data-make': carousel.make } : {}),
+          ...(carousel.model ? { 'data-model': carousel.model } : {}),
+          ...(carousel.bodyStyle ? { 'data-body-style': carousel.bodyStyle } : {}),
+          ...(carousel.priceMax ? { 'data-price-max': carousel.priceMax } : {})
+        } : {}),
         ...extras
       };
       const lines = Object.entries(attrs).map(([k, v]) => k === 'class' ? `class="${v}"` : `  ${k}="${v}"`);
@@ -174,12 +252,27 @@
       document.getElementById('colorWheelSingle').value = color;
     }
 
+    function syncCarouselInputs(carousel) {
+      document.getElementById('carouselMakeSingle').value = carousel.make;
+      document.getElementById('carouselModelSingle').value = carousel.model;
+      document.getElementById('carouselBodySingle').value = carousel.bodyStyle;
+      document.getElementById('carouselPriceSingle').value = carousel.priceMax;
+    }
+
+    function syncDemoControls(type) {
+      const carouselMode = isCarousel(type);
+      document.getElementById('colorControls').style.display = carouselMode ? 'none' : '';
+      document.getElementById('carouselControlsSingle').style.display = carouselMode ? '' : 'none';
+      document.getElementById('carouselHelperSingle').style.display = carouselMode ? '' : 'none';
+    }
+
     function setPanelBg(type) {
       panel.classList.toggle('is-minimal', isMinimal(type));
     }
 
     async function renderWidget() {
       setPanelBg(state.type);
+      syncDemoControls(state.type);
       root.innerHTML = '';
       const el = buildRootEl(state);
       root.appendChild(el);
@@ -187,6 +280,7 @@
       document.getElementById('codeSingle').textContent = snippetFor(state);
       document.getElementById('targetControls').style.display = supportsSubmit(state.type) ? '' : 'none';
       syncColorInputs(state.color);
+      syncCarouselInputs(state.carousel);
     }
 
     async function rerender() {
@@ -229,6 +323,14 @@
       await rerender();
     });
 
+    ['Make', 'Model', 'Body', 'Price'].forEach((field) => {
+      document.getElementById(`carousel${field}Single`).addEventListener('change', async (event) => {
+        const key = { Make: 'make', Model: 'model', Body: 'bodyStyle', Price: 'priceMax' }[field];
+        state.carousel[key] = event.target.value;
+        await rerender();
+      });
+    });
+
     document.querySelectorAll('#targetControls .btn').forEach((btn) => {
       btn.addEventListener('click', async () => {
         document.querySelectorAll('#targetControls .btn').forEach((b) => b.classList.remove('is-active'));
@@ -242,6 +344,8 @@
     document.getElementById('copyInlineSingle').onclick = () => navigator.clipboard.writeText(document.getElementById('codeInlineSingle').textContent);
 
     syncColorInputs(state.color);
+    syncCarouselInputs(state.carousel);
+    syncDemoControls(state.type);
     renderWidget();
   </script>
   <script src="./app.js"></script>
