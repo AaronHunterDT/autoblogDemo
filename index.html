@@ -28,6 +28,7 @@
         <a href="./" class="is-active">Home</a>
         <a href="./widget.html">Widget Test</a>
         <a href="./quotes.html">Widget Comparison</a>
+        <a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
       </nav>
     </div>
   </header>
@@ -35,11 +36,11 @@
   <section class="hero">
     <div class="container hero__inner">
       <h1 class="hero__title">Single-page demo hub</h1>
-      <p class="hero__dek">Use this home page for in-page faux article examples, then jump to the two widget customization pages to test embeds, colors, and the click carousel.</p>
+      <p class="hero__dek">Use this home page for in-page faux article examples, then jump to the widget test pages for embed checks and the dedicated click carousel route for the Jeep Grand Cherokee inventory demo.</p>
       <div class="pill-nav" role="navigation" aria-label="Demo sections">
         <button class="pill is-active">Editorial demo</button>
         <button class="pill">Inline widget</button>
-        <button class="pill">Carousel example</button>
+        <a class="pill" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
       </div>
     </div>
   </section>
@@ -96,7 +97,7 @@
             <div class="card__body">
               <a href="#" class="kicker">LAYOUT</a>
               <h3 class="card__title"><a href="#">Mock article: simplifying the site structure to three demo destinations</a></h3>
-              <p class="card__excerpt">The navigation now focuses only on Home, Widget Test, and Widget Comparison to keep the demo environment easy to scan.</p>
+              <p class="card__excerpt">The navigation now adds a dedicated Click Carousel Demo route so the inventory experience can be shared with URL-driven defaults.</p>
               <div class="card__meta">4 min read · Demo content</div>
             </div>
           </article>
@@ -104,10 +105,10 @@
       </section>
 
       <section class="widget-box home-callout">
-        <h2 class="widget-box__title">Click carousel example</h2>
+        <h2 class="widget-box__title">Click carousel demo route</h2>
         <div class="widget-slot widget-slot--padded">
-          <p class="widget-note">Inventory carousel preview. Use the Widget Test and Widget Comparison pages to switch make, model, body style, and price presets for carousel behavior demos.</p>
-          <div class="dt-inventory-carousel" data-gid="0000-5200" data-tenant="AF30949"></div>
+          <p class="widget-note">The click carousel now lives on its own dedicated demo page so it can use URL-driven Jeep Grand Cherokee defaults, <code>use-qs</code>, and ZIP 75001 without the extra customization controls.</p>
+          <p><a class="btn" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Open Click Carousel Demo</a></p>
         </div>
       </section>
 
@@ -120,7 +121,7 @@
   <footer class="site-footer">
     <div class="container footer__inner">
       <nav class="footer-nav" aria-label="Footer">
-        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a>
+        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a><a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
       </nav>
       <p class="copyright">© <span id="year"></span> Demo Media. Internal AutoFinder widget demo only.</p>
     </div>

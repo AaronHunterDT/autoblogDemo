@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Click Carousel Demo</title>
+  <meta name="description" content="Dedicated Detroit Trading click carousel demo with Jeep Grand Cherokee query-string defaults and ZIP 75001 for stronger inventory results." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container header__inner">
+      <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">⬤</span><span class="brand__text">AutoFinder Demo Lab</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">☰</button>
+      <nav class="site-nav" id="siteNav" aria-label="Primary">
+        <a href="./">Home</a>
+        <a href="./widget.html">Widget Test</a>
+        <a href="./quotes.html">Widget Comparison</a>
+        <a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001" class="is-active">Click Carousel Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero__inner">
+      <h1 class="hero__title">Click Carousel Demo</h1>
+      <p class="hero__dek">A dedicated inventory carousel experience that leans on query-string preselection and a hard-coded ZIP of 75001, so the demo opens directly to Jeep Grand Cherokee inventory with stronger result density.</p>
+    </div>
+  </section>
+
+  <main class="container quotes-wrap carousel-demo-page">
+    <section class="widget-box carousel-demo-intro">
+      <h2 class="widget-box__title">Why this page exists</h2>
+      <div class="widget-slot widget-slot--padded carousel-demo-copy">
+        <p>This page replaces click-carousel customization controls with a purpose-built demo route. Per the widget docs, the carousel can read make, model, and ZIP from the URL when <code>use-qs</code> is enabled, which is a cleaner demo pattern than trying to customize the carousel like the other widgets.</p>
+        <ul class="demo-bullets">
+          <li>URL defaults this page to <strong>Jeep Grand Cherokee</strong>.</li>
+          <li>The widget enables <strong>query string overrides</strong> via <code>use-qs</code>.</li>
+          <li>ZIP <strong>75001</strong> is hard-coded on the widget for better inventory coverage.</li>
+          <li>The embed uses <strong>widget.js</strong> instance rendering so the page fits the dynamic loading guidance for SPA-like demos.</li>
+        </ul>
+        <div class="demo-chip-row" aria-label="Quick links">
+          <a class="pill is-active" href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Jeep Grand Cherokee</a>
+          <a class="pill" href="./click-carousel-demo.html?make=Jeep&model=Wrangler&zip=75001">Jeep Wrangler</a>
+          <a class="pill" href="./click-carousel-demo.html?make=Toyota&model=4Runner&zip=75001">Toyota 4Runner</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="quotes-card demo-panel carousel-demo-panel">
+      <div class="demo-helper">This demo intentionally removes visual customization controls and instead showcases the click carousel with URL-driven defaults.</div>
+      <div id="carouselRoot"></div>
+    </section>
+
+    <section class="codebox" style="margin-top:16px;">
+      <div class="bar">
+        <span>Copy embed snippet</span>
+        <button class="copy-btn" id="copyCarouselSnippet">Copy</button>
+      </div>
+      <pre><code id="carouselSnippet"></code></pre>
+    </section>
+
+    <section class="codebox" style="margin-top:12px;">
+      <div class="bar">
+        <span>Shareable demo URL</span>
+        <button class="copy-btn" id="copyCarouselUrl">Copy</button>
+      </div>
+      <pre><code id="carouselUrl"></code></pre>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="./">Home</a><a href="./widget.html">Widget Test</a><a href="./quotes.html">Widget Comparison</a><a href="./click-carousel-demo.html?make=Jeep&model=Grand%20Cherokee&zip=75001">Click Carousel Demo</a>
+      </nav>
+      <p class="copyright">© <span id="year"></span> Demo Media.</p>
+    </div>
+  </footer>
+
+  <script src="https://www.rydeshopper.com/app/shoppingtools/scripts/widget.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const dtc = window.dtc;
+    const root = document.getElementById('carouselRoot');
+    const instance = new dtc.Widget({ slot: 1 });
+    const params = new URLSearchParams(window.location.search);
+    const fallbackState = { make: 'Jeep', model: 'Grand Cherokee', zip: '75001' };
+    const state = {
+      make: params.get('make') || fallbackState.make,
+      model: params.get('model') || fallbackState.model,
+      zip: '75001'
+    };
+
+    function buildCarouselEl({ make, model, zip }) {
+      const el = document.createElement('div');
+      el.className = 'dt-inventory-carousel';
+      el.setAttribute('data-gid', '0000-5200');
+      el.setAttribute('data-tenant', 'AF30949');
+      el.setAttribute('data-make', make);
+      el.setAttribute('data-model', model);
+      el.setAttribute('data-zip', zip);
+      el.setAttribute('use-qs', 'true');
+      el.setAttribute('data-use-qs', 'true');
+      return el;
+    }
+
+    function snippetFor({ make, model, zip }) {
+      return `<div class="dt-inventory-carousel"\n  data-gid="0000-5200"\n  data-tenant="AF30949"\n  data-make="${make}"\n  data-model="${model}"\n  data-zip="${zip}"\n  use-qs="true"\n  data-use-qs="true"></div>`;
+    }
+
+    async function renderCarousel() {
+      root.innerHTML = '';
+      const el = buildCarouselEl(state);
+      root.appendChild(el);
+      await instance.render(el);
+      document.getElementById('carouselSnippet').textContent = snippetFor(state);
+      document.getElementById('carouselUrl').textContent = window.location.href;
+    }
+
+    document.getElementById('copyCarouselSnippet').onclick = () => navigator.clipboard.writeText(document.getElementById('carouselSnippet').textContent);
+    document.getElementById('copyCarouselUrl').onclick = () => navigator.clipboard.writeText(document.getElementById('carouselUrl').textContent);
+
+    renderCarousel();
+  </script>
+  <script src="./app.js"></script>
+</body>
+</html>
